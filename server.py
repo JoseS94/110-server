@@ -151,6 +151,20 @@ def update_product(id):
             return jsonify({"message": "Product updated successfully"}), HTTPStatus.OK
     return jsonify({"message": "Product not found"}), HTTPStatus.NOT_FOUND
 
+@app.route("/api/coupons/<int:id>", methods=["PUT"])
+def update_coupon(id):
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"message": "Invalid JSON data"}), HTTPStatus.BAD_REQUEST
+
+    for coupon in coupons:
+        if coupon["id"] == id:
+            coupon["code"] = data.get("code", coupon["code"])
+            coupon["discount"] = data.get("discount", coupon["discount"])
+            return jsonify({"message": "Coupon updated successfully"}), HTTPStatus.OK
+
+    return jsonify({"message": "Coupon not found"}), HTTPStatus.NOT_FOUND
 
 
 # ------ Session #4 ------
@@ -172,7 +186,18 @@ def get_product_by_name():
     return jsonify({"Results": matched}), HTTPStatus.OK
 
 
+@app.route("/api/coupons/search", methods=["GET"])
+def get_coupon_by_code():
+    keyword = request.args.get("code").lower()
 
+    if not keyword:
+        return jsonify({"message": "Missing 'code' query parameter"}), HTTPStatus.BAD_REQUEST
+    keyword = keyword.lower()
+    matched = [coupon for coupon in coupons if keyword in coupon["code"].lower()]
+    
+    if [coupons] in coupons ["discount"] < 30:
+            matched.append(coupons)
+    return jsonify({"results": matched}), HTTPStatus.OK
 
 
 
